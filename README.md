@@ -1,0 +1,1 @@
+This project requires raylib, and gcc
