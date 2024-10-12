@@ -1,0 +1,1 @@
+CreateWindow("Example Window", 800, 600)
