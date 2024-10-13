@@ -14,52 +14,52 @@ int cameraMode;
 
 void Handle_Controls(){
     if (IsKeyPressed(KEY_ONE))
-        {
-            cameraMode = CAMERA_FREE;
-            camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };
-        }
+    {
+        cameraMode = CAMERA_FREE;
+        camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };
+    }
 
-        if (IsKeyPressed(KEY_TWO))
-        {
-            cameraMode = CAMERA_FIRST_PERSON;
-            camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };
-        }
+    if (IsKeyPressed(KEY_TWO))
+    {
+        cameraMode = CAMERA_FIRST_PERSON;
+        camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };
+    }
 
-        if (IsKeyPressed(KEY_THREE))
+    if (IsKeyPressed(KEY_THREE))
+    {
+        cameraMode = CAMERA_THIRD_PERSON;
+        camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };
+    }
+
+    if (IsKeyPressed(KEY_FOUR))
+    {
+        cameraMode = CAMERA_ORBITAL;
+        camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };
+    }
+    if (IsKeyPressed(KEY_P))
+    {
+        if (camera.projection == CAMERA_PERSPECTIVE)
         {
             cameraMode = CAMERA_THIRD_PERSON;
+            camera.position = (Vector3){ 0.0f, 2.0f, -100.0f };
+            camera.target = (Vector3){ 0.0f, 2.0f, 0.0f };
             camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };
+            camera.projection = CAMERA_ORTHOGRAPHIC;
+            camera.fovy = 20.0f;
+            CameraYaw(&camera, -135 * DEG2RAD, true);
+            CameraPitch(&camera, -45 * DEG2RAD, true, true, false);
         }
-
-        if (IsKeyPressed(KEY_FOUR))
+        else if (camera.projection == CAMERA_ORTHOGRAPHIC)
         {
-            cameraMode = CAMERA_ORBITAL;
+            // Reset to default view
+            cameraMode = CAMERA_THIRD_PERSON;
+            camera.position = (Vector3){ 0.0f, 2.0f, 10.0f };
+            camera.target = (Vector3){ 0.0f, 2.0f, 0.0f };
             camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };
+            camera.projection = CAMERA_PERSPECTIVE;
+            camera.fovy = 60.0f;
         }
-        if (IsKeyPressed(KEY_P))
-        {
-            if (camera.projection == CAMERA_PERSPECTIVE)
-            {
-                cameraMode = CAMERA_THIRD_PERSON;
-                camera.position = (Vector3){ 0.0f, 2.0f, -100.0f };
-                camera.target = (Vector3){ 0.0f, 2.0f, 0.0f };
-                camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };
-                camera.projection = CAMERA_ORTHOGRAPHIC;
-                camera.fovy = 20.0f;
-                CameraYaw(&camera, -135 * DEG2RAD, true);
-                CameraPitch(&camera, -45 * DEG2RAD, true, true, false);
-            }
-            else if (camera.projection == CAMERA_ORTHOGRAPHIC)
-            {
-                // Reset to default view
-                cameraMode = CAMERA_THIRD_PERSON;
-                camera.position = (Vector3){ 0.0f, 2.0f, 10.0f };
-                camera.target = (Vector3){ 0.0f, 2.0f, 0.0f };
-                camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };
-                camera.projection = CAMERA_PERSPECTIVE;
-                camera.fovy = 60.0f;
-            }
-        }
+    }
 }
 
 int main(void)
@@ -77,17 +77,6 @@ int main(void)
     camera.projection = CAMERA_PERSPECTIVE;
 
     int cameraMode = CAMERA_FIRST_PERSON;
-
-    float heights[MAX_COLUMNS] = { 0 };
-    Vector3 positions[MAX_COLUMNS] = { 0 };
-    Color colors[MAX_COLUMNS] = { 0 };
-
-    for (int i = 0; i < MAX_COLUMNS; i++)
-    {
-        heights[i] = (float)GetRandomValue(1, 12);
-        positions[i] = (Vector3){ (float)GetRandomValue(-15, 15), heights[i]/2.0f, (float)GetRandomValue(-15, 15) };
-        colors[i] = (Color){ GetRandomValue(20, 255), GetRandomValue(10, 55), 30, 255 };
-    }
 
     DisableCursor();
 
@@ -109,18 +98,8 @@ int main(void)
                 DrawCube((Vector3){ 16.0f, 2.5f, 0.0f }, 1.0f, 5.0f, 32.0f, LIME);
                 DrawCube((Vector3){ 0.0f, 2.5f, 16.0f }, 32.0f, 5.0f, 1.0f, GOLD);
 
-                for (int i = 0; i < MAX_COLUMNS; i++)
-                {
-                    DrawCube(positions[i], 2.0f, heights[i], 2.0f, colors[i]);
-                    DrawCubeWires(positions[i], 2.0f, heights[i], 2.0f, MAROON);
-                    if (cameraMode == CAMERA_THIRD_PERSON)
-                    {
-                        DrawCube(camera.target, 0.5f, 0.5f, 0.5f, PURPLE);
-                        DrawCubeWires(camera.target, 0.5f, 0.5f, 0.5f, DARKPURPLE);
-                    }
-                }
-
             EndMode3D();
+
             DrawRectangle(5, 5, 330, 100, Fade(SKYBLUE, 0.5f));
             DrawRectangleLines(5, 5, 330, 100, BLUE);
 
