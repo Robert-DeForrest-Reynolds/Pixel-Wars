@@ -1,6 +1,7 @@
 Include/raylib.h
 Include/raymath.h
 Include/rlgl.h
+Include/rcamera.h
 Library/libraylib.a
 Library/libraylibdll.a
 Library/raylib.dll

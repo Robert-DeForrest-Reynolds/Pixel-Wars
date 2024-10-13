@@ -1,5 +1,4 @@
 SourceFiles = 	Source/Entry.c\
-			  	Source/SourceFileRead.c\
 				Source/Creeps.c\
 
 build:
